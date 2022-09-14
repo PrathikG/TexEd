@@ -2,7 +2,6 @@
 SAVE AS editor.java
  */
 package cscorner.javaswing;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -11,8 +10,10 @@ import java.awt.GraphicsEnvironment;
 import javax.swing.*;
 import java.io.*;
 import java.awt.event.*;
+import java.util.Scanner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class editor {
 
@@ -27,7 +28,7 @@ public class editor {
     JRadioButton nightButton, dayButton;
     JToggleButton toggleButton;
     JMenu file, info;
-    JMenuItem saveicon, Edit, about, New, save, exit, cut, copy, paste, selectall;
+    JMenuItem saveicon, Edit, about, New, save, exit,open, cut, copy, paste, selectall;
 
 //----- Constructor
     editor() {
@@ -72,10 +73,12 @@ public class editor {
         file = new JMenu("File");
         New = new JMenuItem("New");
         save = new JMenuItem("Save");
+        open = new JMenuItem("Open");       //file menu
         exit = new JMenuItem("Exit");
 
         file.add(New);              //To add menu items and submenus to a JMenu , we use the add(New)method.
-        file.add(save);            //a new menu item "save" is added to main menu "file"
+        file.add(save);    
+        file.add(open);        //a new menu item "save" is added to main menu "file"
         file.add(exit);           // a new menu item "exit" is added to main menu "file"
 
 //----- Create submenu for menu
@@ -115,6 +118,7 @@ public class editor {
         save.setIcon(new ImageIcon("D:\\s.png"));
         New.setIcon(new ImageIcon("D:\\n.png"));
         exit.setIcon(new ImageIcon("D:\\e.png"));
+        open.setIcon(new ImageIcon("D:\\o.png"));
 
 //-----JLABEL for font size spinner
         fontLabel = new JLabel("Font: ");
@@ -309,6 +313,42 @@ public class editor {
                 }//Creates a new Font object by replicating the current Font object and applying a new size to it.
             }
         });
+        //----------adding action listener for OPEN
+      //***********
+        open.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                 if(e.getSource()==open) {
+					   JFileChooser fileChooser = new JFileChooser();
+					   fileChooser.setCurrentDirectory(new File("."));
+					   FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
+					   fileChooser.setFileFilter(filter);
+   
+					   int response = fileChooser.showOpenDialog(null);
+   
+					   if(response == JFileChooser.APPROVE_OPTION) {
+						   File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+						   Scanner fileIn = null;
+    
+						   try {
+							   fileIn = new Scanner(file);
+							   if(file.isFile()) {
+								   while(fileIn.hasNextLine()) {
+									   String line = fileIn.nextLine()+"\n";
+									   t.append(line);
+								   }
+							   }
+						   } catch (FileNotFoundException e1) {
+     
+							   e1.printStackTrace();
+						   }
+						   finally {
+							   fileIn.close();
+						   }
+					   }
+                 }
+            }
+                
+            });
 //-----adding ActionListener for SAVE
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -337,7 +377,14 @@ public class editor {
         });
         
         
+        
+        
+        
+        
+        
+        
            
     }
 }
+
     
